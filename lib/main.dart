@@ -1,75 +1,34 @@
-import "dart:io";
-import "package:flutter/material.dart";
-import 'package:intl/intl.dart';
-import "package:path_provider/path_provider.dart";
-import 'BaseModel.dart';
-import "appointments/Appointments.dart";
-import "contacts/Contacts.dart";
-import "notes/Notes.dart";
-import "tasks/Tasks.dart";
-import "utils.dart" as utils;
-void main() {
-  startMeUp() async {
-    Directory docsDir =
-    await getApplicationDocumentsDirectory();
-    utils.docsDir = docsDir;
-    runApp(FlutterBook());
-  }
-  startMeUp();
-}
+import 'package:flutter/material.dart';
+import 'package:flutter_app1/pages/HomePage.dart';
 
-class FlutterBook extends StatelessWidget {
-  Widget build(BuildContext inContext) {
+// main() является главной функцией с которой начинается
+// выполнение приложения
+// возвращает виджет приложения
+void main() => runApp(MyApp());
+
+// В Flutter все является виджетом (кнопки,списки, текст и т.д.)
+// виджет - это отдельный компонент, который может быть отрисован
+// на экране (не путать с Android виджетами)
+// Наиболее простые виджеты наследуются от StatelessWidget класса
+// и не имеют состояния
+class MyApp extends StatelessWidget {
+
+  // функция build отвечает за построение иерархии виджетов
+  @override
+  Widget build(BuildContext context) {
+    // виджет MaterialApp - главный виджет приложения, который
+    // позволяет настроить тему и использовать
+    // Material Design для разработки.
     return MaterialApp(
-        home : DefaultTabController(
-            length : 4,
-            child : Scaffold(
-                appBar : AppBar(
-                    title : Text("FlutterBook"),
-                    bottom : TabBar(
-                        tabs : [
-                          Tab(icon : Icon(Icons.date_range),
-                              text : "Appointments"),
-                          Tab(icon : Icon(Icons.contacts),
-                              text : "Contacts"),
-                          Tab(icon : Icon(Icons.note),
-                              text : "Notes"),
-                          Tab(icon : Icon(Icons.assignment_turned_in),
-                              text : "Tasks")
-                        ]
-                    )
-                ),
-                body : TabBarView(
-                    children : [
-                    Notes()
-                ]
-            )
-        )
-    )
+      // заголовок приложения
+      // обычно виден, когда мы сворачиваем приложение
+      title: 'Json Placeholder App',
+      // настройка темы, мы ещё вернёмся к этому
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // указываем исходную страницу, которую мы создадим позже
+      home: HomePage(),
     );
-  }
-}
-Future selectDate(
-    BuildContext inContext, BaseModel inModel,
-    String inDateString
-    ) async {
-  DateTime initialDate = DateTime.now();
-  if (inDateString != null) {
-    List dateParts = inDateString.split(",");
-    initialDate = DateTime(
-        int.parse(dateParts[0]),
-        int.parse(dateParts[1]),
-        int.parse(dateParts[2])
-    );
-  }
-  DateTime picked = await showDatePicker(
-      context : inContext, initialDate : initialDate,
-      firstDate : DateTime(1900), lastDate : DateTime(2100)
-  );
-  if (picked != null) {
-    inModel.setChosenDate(
-        DateFormat.yMMMMd("en_US").format(picked.toLocal())
-    );
-    return "${picked.year},${picked.month},${picked.day}";
   }
 }
